@@ -1,0 +1,60 @@
+   <html>
+   <body>
+     <h1> Search.php </h1>
+     <form>
+       Actor/Actress Name: <input type="text" name="actor" placeholder="Search...">
+       <input type="submit">
+     </form>
+     <form>
+       Movie Name: <input type="text" name="movie" placeholder="Search...">
+       <input type="submit">
+     </form>
+   </body>
+   <?php 
+    $db = new mysqli('localhost', 'cs143', '', 'class_db'); 
+    if ($db->connect_errno > 0) {
+   die('Unable to connect to database [' . $db->connect_error . ']');
+   }
+   $actor = $_GET['actor'];
+   if(empty($actor)){
+   echo "<h4> Heh, you didn't search anything </h4>";
+   }
+   else {
+   $parts = explode(" ", trim($actor));
+   $query = "";
+   if ($parts[0]){
+   $query=$query."SELECT first, last, dob, id
+             FROM Actor
+             WHERE (first LIKE '%$parts[0]%' OR last LIKE '%$parts[0]%')";
+   $rs = $db->query($query);
+   }
+   
+   foreach (array_slice($parts,1) as $part) {
+   $query = $query."AND
+	     (first LIKE '%$part%' OR last LIKE '%$part%')";
+   $rs = $db->query($query);
+   } 
+   
+   echo "<h4>Actors:</h4>";
+   echo "<table class = center border = '1'>
+	 <tr>
+	   <th>Name</th>
+	   <th>Date of Birth</th>
+	 </tr>";
+	 while($row = $rs->fetch_assoc()) {
+	 
+	 echo "<tr>";
+       $full_name = $row['first']." ".$row['last'];
+       $id = $row['id'];
+       echo "<td><a href='./actor.php?id=$id'>" . "$full_name" . "</a></td>";
+       echo "<td>" . $row['dob'] . "</td>";
+       echo "</tr>";
+	 
+	 }
+	 echo "</tables>";
+
+}
+$rs.free();
+   ?>
+   
+   </html>

@@ -1,0 +1,4 @@
+#!/bin/bash
+rm -rf ./output
+python3 bookPairs.py
+head -10 ./output/part*

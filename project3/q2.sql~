@@ -1,0 +1,1 @@
+SELECT affiliation_country FROM Prize WHERE affiliation_country LIKE '%CERN%';

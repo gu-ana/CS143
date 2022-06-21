@@ -1,0 +1,11 @@
+db.laureates.aggregate([
+    { $match : {"nobelPrizes.affiliations.name.en":"CERN"} },
+    { $unwind: "$nobelPrizes"},
+    { $unwind: "$nobelPrizes.affiliations"},
+    
+    { $project: {_id: 0, country:"$nobelPrizes.affiliations.country.en"}},
+    
+    { $limit : 1}
+
+    
+])
